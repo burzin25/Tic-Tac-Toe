@@ -1,0 +1,165 @@
+#----------Global Variables----------
+
+#Create the tic tac toe board
+
+# Step1 : Define the Structure of the game-board
+board=["_","_","_",
+       "_","_","_",
+       "_","_","_"]
+
+#if game is still going : A variable used to initate an end to the game if FALSE
+game_still_going=True
+# Who won or is it a tie: Variable to allot the winner to
+winner=None
+#Whose turn is it : Variable that decides whose turn it is now
+current_player='X'
+
+def display_board(): #Displaying the structure of the game play board.
+    print(board[0]+" | "+board[1]+" | "+board[2])
+    print(board[3]+" | "+board[4]+" | "+board[5])
+    print(board[6]+" | "+board[7]+" | "+board[8])
+
+def handle_turn(player):
+    print(player + " player's turn")
+    position=(input("Choose a position from 1 to 9:   "))
+
+    #Valid: Variable to decide to enter or break the while loop
+    valid = False
+
+    # While Loop to enter the checking stage of the input by user
+    while not valid:
+
+        while position not in ["1","2","3","4","5","6","7","8","9"]:
+            position=input("Invalid input. Choose a position from 1 to 9  ")
+
+        position = int(position) - 1
+        # If : to check if the entry is in the empty position and not being override on the other
+        if str(board[position])=="_":
+            # valid = True would stop this check while loop
+            valid=True
+        else:
+            print("you cannot go there")
+
+
+    # Place the mark of that current player on the board
+    board[position]=player
+
+def check_for_winner():
+
+# Set up global variables
+    global winner
+    #Check Rows
+    row_winner=check_rows()
+
+    #Check Diagonals
+    diagonal_winner = check_diagonals()
+
+    #Check Columns
+    column_winner = check_columns()
+
+    if row_winner:
+        winner=row_winner
+    elif column_winner:
+        winner=column_winner
+    elif diagonal_winner:
+        winner=diagonal_winner
+    else:
+        winner=None
+    return
+
+def check_rows():
+
+    global game_still_going
+
+    row1=board[0]==board[1]==board[2]!='_'
+    row2 = board[3] == board[4] == board[5] != '_'
+    row3 = board[6] == board[7] == board[8] != '_'
+
+    if row1 or row2 or row3:
+        game_still_going=False
+
+    if row1:
+        return board[0]
+    elif row2:
+        return board[3]
+    elif row3:
+        return board[6]
+
+def check_columns():
+
+    global game_still_going
+
+    col1=board[0]==board[3]==board[6]!='_'
+    col2 = board[1] == board[4] == board[7] != '_'
+    col3 = board[2] == board[5] == board[8] != '_'
+
+    if col1 or col2 or col3:
+        game_still_going=False
+
+    if col1:
+        return board[0]
+    elif col2:
+        return board[1]
+    elif col3:
+        return board[2]
+
+
+
+def check_diagonals():
+
+
+    global game_still_going
+
+    diag1=board[0]==board[4]==board[8]!='_'
+    diag2 = board[2] == board[4] == board[6] != '_'
+
+
+    if diag1 or diag2:
+        game_still_going=False
+
+    if diag1:
+        return board[0]
+    elif diag2:
+        return board[2]
+
+def check_if_tie():
+
+    global game_still_going
+    if "_" not in board:
+         game_still_going=False
+         print("Tie")
+
+# Method to call other method to check who won the game
+def check_if_gameover():
+    check_for_winner()
+    check_if_tie()
+
+#Method to switch player after each turn
+def flip_player():
+
+    global current_player
+
+    if current_player=="X":
+        current_player="O"
+    else:
+        current_player="X"
+    return
+
+
+# Main Function or Mathod to combine all other methods to execute the game from start to finish
+def play_game(): # all game method and steps executed in order to play
+
+    while game_still_going:
+        display_board()
+        handle_turn(current_player)
+        check_if_gameover()
+        flip_player()
+
+        if winner == 'X' or winner == 'O':
+            print("Winner is" + winner)
+        elif winner == None:
+            check_if_tie()
+
+
+play_game()
+
